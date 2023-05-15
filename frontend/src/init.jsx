@@ -1,1 +1,5 @@
-export default () => 'whohohoho';
+import React from 'react';
+
+import App from './components/App';
+
+export default async () => (<App />);
