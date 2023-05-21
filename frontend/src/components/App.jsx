@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
-    localStorage.removeItem('userId');
+    localStorage.removeItem('user');
     setLoggedIn(false);
   };
 
@@ -63,7 +63,7 @@ const App = () => (
       <div className="d-flex flex-column h-100">
         <Navbar expand="lg" bg="white" className="shadow-sm">
           <Container>
-            <Navbar.Brand as={Link} to="/">Slack chat</Navbar.Brand>
+            <Navbar.Brand as={Link} to="/">Hexlet chat</Navbar.Brand>
             <Nav className="mr-auto" />
             <AuthButton />
           </Container>
