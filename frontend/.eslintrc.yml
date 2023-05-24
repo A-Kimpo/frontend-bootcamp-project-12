@@ -25,3 +25,5 @@ rules:
   jsx-a11y/label-has-associated-control: 0
   react/jsx-no-constructed-context-values: 0
   jsx-a11y/no-autofocus: 0
+  no-param-reassign: 0
+  react-hooks/exhaustive-deps: 0
