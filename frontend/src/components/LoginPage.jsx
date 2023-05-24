@@ -11,7 +11,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import axios from 'axios';
-// import { object, string } from 'yup';
+import { object, string } from 'yup';
 
 import useAuth from '../hooks/index.jsx';
 import routes from '../routes.js';
@@ -31,17 +31,17 @@ const LoginPage = () => {
     checkAuth();
   }, []);
 
-  // const schema = object({
-  //   username: string().required(),
-  //   password: string().required(),
-  // });
+  const schema = object({
+    username: string().required(),
+    password: string().required(),
+  });
 
   const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
     },
-    // schema,
+    schema,
     onSubmit: async (values) => {
       const { username } = values;
 
