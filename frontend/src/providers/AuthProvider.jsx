@@ -1,4 +1,9 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, {
+  useState,
+  createContext,
+  useContext,
+  useMemo,
+} from 'react';
 import { Button } from 'react-bootstrap';
 import { useLocation, Navigate } from 'react-router-dom';
 
@@ -9,14 +14,26 @@ const useAuth = () => useContext(AuthContext);
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const getUserName = () => {
+    const { username } = JSON.parse(localStorage.getItem('user'));
+    return username;
+  };
+
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
     localStorage.removeItem('user');
     setLoggedIn(false);
   };
 
+  const memo = useMemo(() => ({
+    loggedIn,
+    logIn,
+    logOut,
+    getUserName,
+  }));
+
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
+    <AuthContext.Provider value={memo}>
       {children}
     </AuthContext.Provider>
   );
