@@ -13,7 +13,7 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import { object, string } from 'yup';
 
-import useAuth from '../hooks/index.jsx';
+import { useAuth } from '../providers/AuthProvider.jsx';
 import routes from '../routes.js';
 
 const LoginPage = () => {
@@ -31,7 +31,7 @@ const LoginPage = () => {
     checkAuth();
   }, []);
 
-  const schema = object({
+  const validationSchema = object({
     username: string().required(),
     password: string().required(),
   });
@@ -41,7 +41,7 @@ const LoginPage = () => {
       username: '',
       password: '',
     },
-    schema,
+    validationSchema,
     onSubmit: async (values) => {
       const { username } = values;
 

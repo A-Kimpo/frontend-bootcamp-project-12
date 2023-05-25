@@ -14,7 +14,7 @@ const MainPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const getData = async () => {
+    (async () => {
       const { token } = JSON.parse(localStorage.getItem('user'));
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -26,8 +26,7 @@ const MainPage = () => {
       dispatch(channelsActions.addChannels(channels));
       dispatch(channelsActions.setCurrentChannel(currentChannelId));
       dispatch(messagesActions.addMessages(messages));
-    };
-    getData();
+    })();
   }, []);
 
   return (

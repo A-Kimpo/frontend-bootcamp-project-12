@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Link,
-  Navigate,
-  useLocation,
 } from 'react-router-dom';
-
 import {
-  Button,
   Navbar,
   Nav,
   Container,
@@ -19,43 +15,7 @@ import LoginPage from './LoginPage';
 import SignUpPage from './SignUpPage';
 import Page404 from './Page404';
 import MainPage from './chat/MainPage';
-import AuthContext from '../contexts/index';
-import useAuth from '../hooks/index';
-
-const AuthProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const logIn = () => setLoggedIn(true);
-  const logOut = () => {
-    localStorage.removeItem('user');
-    setLoggedIn(false);
-  };
-
-  return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-const PrivateRoute = ({ children }) => {
-  const auth = useAuth();
-  const location = useLocation();
-
-  return (
-    auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
-  );
-};
-
-const AuthButton = () => {
-  const auth = useAuth();
-
-  return (
-    auth.loggedIn
-      ? <Button onClick={auth.logOut}>Log out</Button>
-      : null
-  );
-};
+import AuthProvider, { PrivateRoute, AuthButton } from '../providers/AuthProvider';
 
 const App = () => (
   <AuthProvider>
