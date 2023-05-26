@@ -62,34 +62,45 @@ const UnremovableChannel = (props) => {
   );
 };
 
-const Channels = () => {
-  const channels = useSelector(channelsSelectors.selectAll);
-  const currentChannel = useSelector((state) => state.channels.currentChannel);
+const ChannelsHeader = ({ addChannel }) => (
+  <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
+    <b>Каналы</b>
+    <Button onClick={() => addChannel('NEW CHANNEL')} type="button" variant="group-vertical" className="p-0 text-primary">
+      <Image src="addChannel.svg" />
+      <span className="visually-hidden">+</span>
+    </Button>
+  </div>
+);
 
-  const socket = useSocket();
+const ChannelsField = ({ channels }) => {
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
 
   const renderChannels = channels.map(({ id, name, removable }) => (
     <React.Fragment key={id}>
       <Nav.Item as="li" className="w-100">
         {!removable
-          ? <UnremovableChannel id={id} name={name} currentChannel={currentChannel} />
-          : <RemovableChannel id={id} name={name} currentChannel={currentChannel} />}
+          ? <UnremovableChannel id={id} name={name} currentChannel={currentChannelId} />
+          : <RemovableChannel id={id} name={name} currentChannel={currentChannelId} />}
       </Nav.Item>
     </React.Fragment>
   ));
 
   return (
+    <Nav as="ul" variant="pills" fill id="channels-box" className="flex-column px-2 mb-3 overflow-auto h-100 d-block">
+      {renderChannels}
+    </Nav>
+  );
+};
+
+const Channels = () => {
+  const channels = useSelector(channelsSelectors.selectAll);
+
+  const { addChannel } = useSocket();
+
+  return (
     <Col xs={4} md={2} className="border-end px-0 bg-light flex-column h-100 d-flex">
-      <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-        <b>Каналы</b>
-        <Button onClick={() => socket.addChannel('NEW CHANNEL')} type="button" variant="group-vertical" className="p-0 text-primary">
-          <Image className="primary" src="addChannel.svg" />
-          <span className="visually-hidden">+</span>
-        </Button>
-      </div>
-      <Nav as="ul" variant="pills" fill id="channels-box" className="flex-column px-2 mb-3 overflow-auto h-100 d-block">
-        {renderChannels}
-      </Nav>
+      <ChannelsHeader addChannel={addChannel} />
+      <ChannelsField channels={channels} />
     </Col>
   );
 };

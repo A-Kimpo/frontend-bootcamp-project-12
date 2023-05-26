@@ -30,7 +30,7 @@ const SignUpPage = () => (
                   autoComplete="username"
                   className="form-control"
                 />
-                <label className="form-label" htmlFor="username">Имя пользователя</label>
+                <Form.Label htmlFor="username">Имя пользователя</Form.Label>
                 <Form.Control.Feedback type="invalid" placement="right" tooltip>Обязательное поле</Form.Control.Feedback>
               </Form.Floating>
               <Form.Floating className="mb-3">
@@ -44,7 +44,7 @@ const SignUpPage = () => (
                   aria-describedby="passwordHelpBlock"
                   className="form-control"
                 />
-                <label className="form-label" htmlFor="password">Пароль</label>
+                <Form.Label htmlFor="password">Пароль</Form.Label>
                 <Form.Control.Feedback type="invalid" tooltip>Обязательное поле</Form.Control.Feedback>
               </Form.Floating>
               <Form.Floating className="mb-4">
@@ -57,7 +57,7 @@ const SignUpPage = () => (
                   autoComplete="new-password"
                   className="form-control"
                 />
-                <label className="form-label" htmlFor="confirmPassword">Подтвердите пароль</label>
+                <Form.Label htmlFor="confirmPassword">Подтвердите пароль</Form.Label>
                 <Form.Control.Feedback type="invalid" tooltip />
               </Form.Floating>
               <Button type="submit" variant="outline-primary" className="w-100">Зарегистрироваться</Button>

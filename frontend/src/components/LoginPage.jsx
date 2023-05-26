@@ -83,7 +83,7 @@ const LoginPage = () => {
                     onChange={formik.handleChange}
                     value={formik.values.username}
                   />
-                  <label htmlFor="username">Ваш ник</label>
+                  <Form.Label htmlFor="username">Ваш ник</Form.Label>
                 </Form.Floating>
                 <Form.Floating className="mb-4">
                   <Form.Control
@@ -96,7 +96,7 @@ const LoginPage = () => {
                     value={formik.values.password}
                     isInvalid={failedLogin}
                   />
-                  <label htmlFor="password">Пароль</label>
+                  <Form.Label htmlFor="password">Пароль</Form.Label>
                   <Form.Control.Feedback type="invalid">
                     the username or password is incorrect
                   </Form.Control.Feedback>
