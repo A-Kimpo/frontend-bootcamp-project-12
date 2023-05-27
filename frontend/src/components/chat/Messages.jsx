@@ -7,10 +7,7 @@ import {
   Form,
   InputGroup,
 } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
 
-import { selectors as messagesSelectors } from '../../slices/messagesSlice';
-import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import { useSocket } from '../../providers/SocketProvider';
 
 const MessagesHeader = ({ channelName, messagesCount }) => (
@@ -75,15 +72,9 @@ const MessagesForm = ({ formik }) => (
   </div>
 );
 
-const Messages = () => {
+const Messages = ({ messages, currentChannel, currentChannelId }) => {
   const { addMessage } = useSocket();
 
-  const messages = useSelector(messagesSelectors.selectAll);
-
-  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
-  const currentChannel = useSelector(
-    (state) => channelsSelectors.selectById(state, currentChannelId),
-  );
   const channelName = !currentChannel ? '' : currentChannel.name;
 
   const channelMessages = messages

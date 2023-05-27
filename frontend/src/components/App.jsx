@@ -25,7 +25,7 @@ const App = () => (
         <div className="d-flex flex-column h-100">
           <Navbar expand="lg" bg="white" className="shadow-sm">
             <Container>
-              <Navbar.Brand as={Link} to="/">Hexlet chat</Navbar.Brand>
+              <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
               <Nav className="mr-auto" />
               <AuthButton />
             </Container>
