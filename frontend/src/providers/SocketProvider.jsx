@@ -19,8 +19,8 @@ const SocketProvider = ({ children }) => {
   socket.on('newChannel', (channelName) => {
     dispatch(channelsActions.addChannel(channelName));
   });
-  socket.on('renameChannel', ({ id, newName }) => {
-    dispatch(channelsActions.renameChannel({ id, changes: { name: newName } }));
+  socket.on('renameChannel', ({ id, name }) => {
+    dispatch(channelsActions.renameChannel({ id, changes: { name } }));
   });
   socket.on('removeChannel', ({ id }) => {
     dispatch(channelsActions.removeChannel(id));
@@ -29,14 +29,18 @@ const SocketProvider = ({ children }) => {
     dispatch(messagesActions.addMessage(messageText));
   });
 
-  const addChannel = (name) => socket.emit('newChannel', { name });
-  const renameChannel = (name) => socket.emit('renameChannel', { name });
+  const addChannel = async (name) => {
+    const { data: { id } } = await socket.emitWithAck('newChannel', { name });
+    dispatch(channelsActions.setCurrentChannel(id));
+  };
+
+  const renameChannel = (id, name) => socket.emit('renameChannel', { id, name });
   const removeChannel = (id) => socket.emit('removeChannel', { id });
 
-  const currentChannel = useSelector((state) => state.channels.currentChannel);
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
 
   const addMessage = (text) => {
-    socket.emit('newMessage', { body: text, channelId: currentChannel, username: auth.getUserName() });
+    socket.emit('newMessage', { body: text, channelId: currentChannelId, username: auth.getUserName() });
   };
 
   const memo = useMemo(() => ({
