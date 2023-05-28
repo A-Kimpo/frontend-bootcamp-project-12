@@ -46,7 +46,7 @@ const LoginPage = () => {
       const { username } = values;
 
       try {
-        const { data: { token } } = await axios.post(routes.loginPath(), values);
+        const { data: { token } } = await axios.post(routes.logInPath(), values);
 
         localStorage.setItem('user', JSON.stringify({ token, username }));
 
@@ -105,11 +105,11 @@ const LoginPage = () => {
               </Form>
             </Card.Body>
             <Card.Footer className="p-4">
-              <div className="text-center">
+              <Container className="text-center">
                 <span>Нет аккаунта?</span>
                 &nbsp;
                 <Link to="/signup">Регистрация</Link>
-              </div>
+              </Container>
             </Card.Footer>
           </Card>
         </Col>
