@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
 import {
   Modal,
@@ -17,9 +17,9 @@ const RenameModal = ({ id, hideModal }) => {
     (state) => channelsSelectors.selectById(state, id),
   );
 
-  const ref = useRef();
   useEffect(() => {
-    ref.current.focus();
+    const ref = document.getElementById('channelNewName');
+    ref.select();
   }, []);
 
   const formik = useFormik({
@@ -49,7 +49,6 @@ const RenameModal = ({ id, hideModal }) => {
               id="channelNewName"
               placeholder="Channel name"
               required
-              ref={ref}
             />
             <Form.Label htmlFor="channelNewName" className="visually-hidden">Rename</Form.Label>
             <Form.Control.Feedback type="invalid">Error</Form.Control.Feedback>

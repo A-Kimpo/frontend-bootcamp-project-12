@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   Modal,
@@ -10,6 +10,11 @@ import { useSocket } from '../../providers/SocketProvider';
 
 const RemoveModal = ({ id, hideModal }) => {
   const { removeChannel } = useSocket();
+
+  useEffect(() => {
+    const ref = document.getElementById('submitRemoving');
+    ref.focus();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,7 +34,7 @@ const RemoveModal = ({ id, hideModal }) => {
           <Form.Group className="d-flex justify-content-end">
             <Button variant="secondary" onClick={hideModal}>Close</Button>
             &nbsp;
-            <Button variant="danger" type="submit">Delete</Button>
+            <Button id="submitRemoving" variant="danger" type="submit">Delete</Button>
           </Form.Group>
         </Form>
       </Modal.Body>
