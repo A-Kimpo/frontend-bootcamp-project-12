@@ -72,10 +72,8 @@ const MessagesForm = ({ formik }) => (
   </div>
 );
 
-const Messages = ({ messages, currentChannel, currentChannelId }) => {
+const Messages = ({ messages, channelName, currentChannelId }) => {
   const { addMessage } = useSocket();
-
-  const channelName = !currentChannel ? '' : currentChannel.name;
 
   const channelMessages = messages
     .filter(({ channelId }) => Number(channelId) === currentChannelId);

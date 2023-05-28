@@ -35,6 +35,7 @@ const MainPage = () => {
   const currentChannel = useSelector(
     (state) => channelsSelectors.selectById(state, currentChannelId),
   );
+  const channelName = !currentChannel ? '' : currentChannel.name;
 
   return (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">
@@ -42,7 +43,7 @@ const MainPage = () => {
         <Channels channels={channels} currentChannelId={currentChannelId} />
         <Messages
           messages={messages}
-          currentChannel={currentChannel}
+          channelName={channelName}
           currentChannelId={currentChannelId}
         />
       </Row>
