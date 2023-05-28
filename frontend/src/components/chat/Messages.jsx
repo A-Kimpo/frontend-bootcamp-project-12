@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   Image,
@@ -28,6 +28,11 @@ const MessagesHeader = ({ channelName, messagesCount }) => (
 );
 
 const MessagesField = ({ messages }) => {
+  useEffect(() => {
+    const messagesBox = document.getElementById('messages-box');
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  });
+
   const renderMessages = messages
     .map(({ id, body, username }) => (
       <React.Fragment key={id}>
