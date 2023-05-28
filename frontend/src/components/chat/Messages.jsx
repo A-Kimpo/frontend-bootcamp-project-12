@@ -60,6 +60,7 @@ const MessagesForm = ({ formik }) => (
           name="textMessage"
           onChange={formik.handleChange}
           value={formik.values.textMessage}
+          autoComplete="off"
           aria-label="Новое сообщение"
           placeholder="Введите сообщение..."
           className="border-0 p-0 ps-2"
