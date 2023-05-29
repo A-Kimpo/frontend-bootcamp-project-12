@@ -6,13 +6,13 @@ import {
   Button,
 } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { object, string } from 'yup';
 import { toast } from 'react-toastify';
 import leoFilter from 'leo-profanity';
 
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import toastifyConfig from '../../toastifyConfig';
+import { getModalSchema } from '../../validation';
 
 const RenameModal = ({ id, hideModal, t }) => {
   const { renameChannel } = useSocket();
@@ -23,12 +23,7 @@ const RenameModal = ({ id, hideModal, t }) => {
   const channels = useSelector(channelsSelectors.selectAll);
   const existingNames = channels.map(({ name }) => name);
 
-  const modalSchema = object({
-    channelNewName: string()
-      .min(3, 'errors.length')
-      .max(20, 'errors.length')
-      .notOneOf(existingNames, 'errors.existChannel'),
-  });
+  const modalSchema = getModalSchema(existingNames);
 
   useEffect(() => {
     const ref = document.getElementById('channelNewName');
@@ -43,7 +38,7 @@ const RenameModal = ({ id, hideModal, t }) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: ({ channelNewName }) => {
-      const isMoral = !leoFilter.clean(channelNewName).match(/[*]{3,}/gi);
+      const isMoral = leoFilter.clean(channelNewName).match(/[*]{3,}/gi);
 
       if (isMoral) {
         toast.warn(t('toast.moral'), toastifyConfig);

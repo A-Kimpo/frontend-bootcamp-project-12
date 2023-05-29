@@ -11,11 +11,11 @@ import {
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { object, string, ref } from 'yup';
 import axios from 'axios';
 
 import routes from '../routes';
 import { useAuth } from '../providers/AuthProvider';
+import { getSignUpSchema } from '../validation';
 
 const SignUpInput = ({ formik, variant, t }) => (
   <Form.Floating className="mb-3">
@@ -43,27 +43,13 @@ const SignUpForm = ({ t }) => {
   const { logIn } = useAuth();
   const navigate = useNavigate();
 
-  const signUpSchema = object({
-    username: string()
-      .trim()
-      .required('errors.required')
-      .min(3, 'errors.length')
-      .max(20, 'errors.length'),
-    password: string()
-      .required('errors.required')
-      .min(6, 'errors.minLength'),
-    confirmPassword: string()
-      .required('errors.required')
-      .oneOf([ref('password')], 'errors.diffPasswords'),
-  });
-
   const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
       confirmPassword: '',
     },
-    validationSchema: signUpSchema,
+    validationSchema: getSignUpSchema(),
     onSubmit: async (values) => {
       const { username, password } = values;
 

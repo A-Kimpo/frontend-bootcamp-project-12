@@ -5,7 +5,6 @@ import {
   Form,
   Button,
 } from 'react-bootstrap';
-import { object, string } from 'yup';
 import { useSelector } from 'react-redux';
 import leoFilter from 'leo-profanity';
 import { toast } from 'react-toastify';
@@ -13,6 +12,7 @@ import { toast } from 'react-toastify';
 import toastifyConfig from '../../toastifyConfig';
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
+import { getModalSchema } from '../../validation';
 
 const AddModal = ({ hideModal, t }) => {
   const { addChannel } = useSocket();
@@ -20,22 +20,15 @@ const AddModal = ({ hideModal, t }) => {
   const channels = useSelector(channelsSelectors.selectAll);
   const existingNames = channels.map(({ name }) => name);
 
-  const modalSchema = object({
-    channelName: string()
-      .min(3, 'errors.length')
-      .max(20, 'errors.length')
-      .notOneOf(existingNames, 'errors.existChannel'),
-  });
-
   const formik = useFormik({
     initialValues: {
       channelName: '',
     },
-    validationSchema: modalSchema,
+    validationSchema: getModalSchema(existingNames),
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: ({ channelName }) => {
-      const isMoral = !leoFilter.clean(channelName).match(/[*]{3,}/gi);
+      const isMoral = leoFilter.clean(channelName).match(/[*]{3,}/gi);
 
       if (isMoral) {
         toast.warn(t('toast.moral'), toastifyConfig);

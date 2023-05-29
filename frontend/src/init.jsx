@@ -20,7 +20,6 @@ export default async () => {
     .init({
       lng: 'ru',
       resources,
-      debug: true,
     });
 
   leoProfanity.loadDictionary('ru');

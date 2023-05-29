@@ -27,7 +27,7 @@ const MainPage = () => {
       dispatch(channelsActions.setCurrentChannel(currentChannelId));
       dispatch(messagesActions.addMessages(messages));
     })();
-  }, []);
+  }, [dispatch]);
 
   const channels = useSelector(channelsSelectors.selectAll);
   const messages = useSelector(messagesSelectors.selectAll);

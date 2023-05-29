@@ -10,29 +10,24 @@ import {
 } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { object, string } from 'yup';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-import routes from '../routes.js';
-import { useAuth } from '../providers/AuthProvider.jsx';
+import routes from '../routes';
+import { useAuth } from '../providers/AuthProvider';
+import { getLogInSchema } from '../validation';
 
 const LogInForm = ({ t }) => {
   const [failedLogIn, setFailedLogIn] = useState(false);
   const { logIn } = useAuth();
   const navigate = useNavigate();
 
-  const logInSchema = object({
-    username: string().required(),
-    password: string().required(),
-  });
-
   const formik = useFormik({
     initialValues: {
       username: '',
       password: '',
     },
-    validationSchema: logInSchema,
+    validationSchema: getLogInSchema(),
     onSubmit: async (values) => {
       const { username } = values;
       try {
