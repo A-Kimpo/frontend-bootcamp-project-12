@@ -12,6 +12,7 @@ import leoFilter from 'leo-profanity';
 
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
+import toastifyConfig from '../../toastifyConfig';
 
 const RenameModal = ({ id, hideModal, t }) => {
   const { renameChannel } = useSocket();
@@ -39,35 +40,19 @@ const RenameModal = ({ id, hideModal, t }) => {
       channelNewName: targetName,
     },
     validationSchema: modalSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: ({ channelNewName }) => {
-      if (leoFilter.clean(channelNewName).match(/[*]{3,}/gi)) {
-        toast.warn(t('toast.moral'), {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+      const isMoral = !leoFilter.clean(channelNewName).match(/[*]{3,}/gi);
+
+      if (isMoral) {
+        toast.warn(t('toast.moral'), toastifyConfig);
         return;
       }
-      toast.success(t('toast.rename'), {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+      toast.success(t('toast.rename'), toastifyConfig);
       renameChannel(id, channelNewName);
       hideModal();
     },
-    validateOnBlur: false,
-    validateOnChange: false,
   });
 
   return (
@@ -85,7 +70,6 @@ const RenameModal = ({ id, hideModal, t }) => {
               type="text"
               placeholder={t('modals.channelName')}
               value={leoFilter.clean(formik.values.channelNewName)}
-              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               isInvalid={formik.errors.channelNewName}
             />

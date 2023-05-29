@@ -7,9 +7,10 @@ import {
 } from 'react-bootstrap';
 import { object, string } from 'yup';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import leoFilter from 'leo-profanity';
+import { toast } from 'react-toastify';
 
+import toastifyConfig from '../../toastifyConfig';
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 
@@ -31,30 +32,16 @@ const AddModal = ({ hideModal, t }) => {
       channelName: '',
     },
     validationSchema: modalSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: ({ channelName }) => {
-      if (leoFilter.clean(channelName).match(/[*]{3,}/gi)) {
-        toast.warn(t('toast.moral'), {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+      const isMoral = !leoFilter.clean(channelName).match(/[*]{3,}/gi);
+
+      if (isMoral) {
+        toast.warn(t('toast.moral'), toastifyConfig);
         return;
       }
-      toast.success(t('toast.add'), {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      });
+      toast.success(t('toast.add'), toastifyConfig);
       addChannel(leoFilter.clean(channelName));
       hideModal();
     },
@@ -75,7 +62,6 @@ const AddModal = ({ hideModal, t }) => {
               type="text"
               placeholder={t('modals.channelName')}
               value={leoFilter.clean(formik.values.channelName)}
-              onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               isInvalid={formik.errors.channelName}
               autoFocus

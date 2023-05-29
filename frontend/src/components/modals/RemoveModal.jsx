@@ -7,6 +7,7 @@ import {
 import { toast } from 'react-toastify';
 
 import { useSocket } from '../../providers/SocketProvider';
+import toastifyConfig from '../../toastifyConfig';
 
 const RemoveModal = ({ id, hideModal, t }) => {
   const { removeChannel } = useSocket();
@@ -18,16 +19,7 @@ const RemoveModal = ({ id, hideModal, t }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast.success(t('toast.remove'), {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
+    toast.success(t('toast.remove'), toastifyConfig);
     removeChannel(id);
     hideModal();
   };
