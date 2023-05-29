@@ -16,7 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import MainPage from './chat/MainPage';
-import LogInPage from './LogInPage';
+import LogInPage from './login/LogInPage';
 import SignUpPage from './SignUpPage';
 import Page404 from './Page404';
 import { useAuth } from '../providers/AuthProvider';
