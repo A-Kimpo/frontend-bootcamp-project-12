@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import { io } from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { actions as channelsActions } from '../slices/channelsSlice';
@@ -8,11 +7,9 @@ import { useAuth } from './AuthProvider';
 
 const SocketContext = createContext({});
 
-const useSocket = () => useContext(SocketContext);
+export const useSocket = () => useContext(SocketContext);
 
-const socket = io();
-
-const SocketProvider = ({ children }) => {
+const SocketProvider = ({ socket, children }) => {
   const dispatch = useDispatch();
   const auth = useAuth();
 
@@ -33,12 +30,10 @@ const SocketProvider = ({ children }) => {
     const { data: { id } } = await socket.emitWithAck('newChannel', { name });
     dispatch(channelsActions.setCurrentChannel(id));
   };
-
   const renameChannel = (id, name) => socket.emit('renameChannel', { id, name });
   const removeChannel = (id) => socket.emit('removeChannel', { id });
 
   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
-
   const addMessage = (text) => {
     socket.emit('newMessage', { body: text, channelId: currentChannelId, username: auth.getUserName() });
   };
@@ -57,5 +52,4 @@ const SocketProvider = ({ children }) => {
   );
 };
 
-export { SocketContext, useSocket };
 export default SocketProvider;
