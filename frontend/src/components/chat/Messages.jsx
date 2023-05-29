@@ -7,10 +7,11 @@ import {
   Form,
   InputGroup,
 } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 
 import { useSocket } from '../../providers/SocketProvider';
 
-const MessagesHeader = ({ channelName, messagesCount }) => (
+const MessagesHeader = ({ channelName, messagesCount, t }) => (
   <div className="bg-light mb-4 p-3 shadow-sm small">
     <p className="m-0">
       <b>
@@ -20,9 +21,7 @@ const MessagesHeader = ({ channelName, messagesCount }) => (
       </b>
     </p>
     <span className="text-muted">
-      {messagesCount}
-      &nbsp;
-      сообщений
+      {t('messages.messagesCount.messages', { count: messagesCount })}
     </span>
   </div>
 );
@@ -52,37 +51,13 @@ const MessagesField = ({ messages }) => {
   );
 };
 
-const MessagesForm = ({ formik }) => (
-  <div className="mt-auto px-5 py-3">
-    <Form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border rounded-2">
-      <InputGroup className="has-validation">
-        <Form.Control
-          name="textMessage"
-          onChange={formik.handleChange}
-          value={formik.values.textMessage}
-          autoComplete="off"
-          aria-label="Новое сообщение"
-          placeholder="Введите сообщение..."
-          className="border-0 p-0 ps-2"
-        />
-        <Button
-          type="submit"
-          disabled=""
-          variant="group-vertical"
-        >
-          <Image src="sendMessage.svg" />
-          <span className="visually-hidden">Отправить</span>
-        </Button>
-      </InputGroup>
-    </Form>
-  </div>
-);
-
-const Messages = ({ messages, channelName, currentChannelId }) => {
+const MessagesForm = ({ t }) => {
   const { addMessage } = useSocket();
 
-  const channelMessages = messages
-    .filter(({ channelId }) => Number(channelId) === currentChannelId);
+  useEffect(() => {
+    const messagesInput = document.getElementById('messagesInput');
+    messagesInput.focus();
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -95,11 +70,45 @@ const Messages = ({ messages, channelName, currentChannelId }) => {
   });
 
   return (
+    <div className="mt-auto px-5 py-3">
+      <Form onSubmit={formik.handleSubmit} noValidate="" className="py-1 border rounded-2">
+        <InputGroup className="has-validation">
+          <Form.Control
+            id="messagesInput"
+            name="textMessage"
+            onChange={formik.handleChange}
+            value={formik.values.textMessage}
+            autoComplete="off"
+            aria-label={t('messages.newMessage')}
+            placeholder={t('messages.messagesInput')}
+            className="border-0 p-0 ps-2"
+          />
+          <Button
+            type="submit"
+            disabled=""
+            variant="group-vertical"
+          >
+            <Image src="sendMessage.svg" />
+            <span className="visually-hidden">{t('messages.send')}</span>
+          </Button>
+        </InputGroup>
+      </Form>
+    </div>
+  );
+};
+
+const Messages = ({ messages, channelName, currentChannelId }) => {
+  const { t } = useTranslation();
+
+  const channelMessages = messages
+    .filter(({ channelId }) => Number(channelId) === currentChannelId);
+
+  return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
-        <MessagesHeader channelName={channelName} messagesCount={channelMessages.length} />
+        <MessagesHeader channelName={channelName} messagesCount={channelMessages.length} t={t} />
         <MessagesField messages={channelMessages} />
-        <MessagesForm formik={formik} />
+        <MessagesForm t={t} />
       </div>
     </Col>
   );
