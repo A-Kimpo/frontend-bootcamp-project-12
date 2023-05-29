@@ -23,6 +23,7 @@ export default async () => {
     });
 
   leoProfanity.loadDictionary('ru');
+  leoProfanity.loadDictionary('en');
 
   const socket = io();
 
