@@ -10,18 +10,19 @@ import {
 } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import axios from 'axios';
 import { object, string } from 'yup';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
-import { useAuth } from '../providers/AuthProvider.jsx';
 import routes from '../routes.js';
+import { useAuth } from '../providers/AuthProvider.jsx';
 
 const LogInForm = ({ t }) => {
-  const [failedLogin, setFailedLogin] = useState(false);
-  const auth = useAuth();
+  const [failedLogIn, setFailedLogIn] = useState(false);
+  const { logIn } = useAuth();
   const navigate = useNavigate();
 
-  const validationSchema = object({
+  const logInSchema = object({
     username: string().required(),
     password: string().required(),
   });
@@ -31,22 +32,24 @@ const LogInForm = ({ t }) => {
       username: '',
       password: '',
     },
-    validationSchema,
+    validationSchema: logInSchema,
     onSubmit: async (values) => {
       const { username } = values;
-
       try {
         const { data: { token } } = await axios.post(routes.logInPath(), values);
 
         localStorage.setItem('user', JSON.stringify({ token, username }));
 
-        auth.logIn();
+        logIn();
 
         navigate('/', { replace: true });
       } catch (err) {
+        if (err.message === 'Network Error') {
+          toast.error(t('errors.networkError'));
+        }
         return err.response.status === 401
-          ? setFailedLogin(true)
-          : setFailedLogin(false);
+          ? setFailedLogIn(true)
+          : setFailedLogIn(false);
       }
       return null;
     },
@@ -76,7 +79,7 @@ const LogInForm = ({ t }) => {
           autoComplete="current-password"
           onChange={formik.handleChange}
           value={formik.values.password}
-          isInvalid={failedLogin}
+          isInvalid={failedLogIn}
         />
         <Form.Label htmlFor="password">{t('logInPage.password')}</Form.Label>
         <Form.Control.Feedback type="invalid">

@@ -40,7 +40,7 @@ const SignUpInput = ({ formik, variant, t }) => (
 const SignUpForm = ({ t }) => {
   const [failedSignUp, setFailedSignUp] = useState(false);
 
-  const auth = useAuth();
+  const { logIn } = useAuth();
   const navigate = useNavigate();
 
   const signUpSchema = object({
@@ -72,7 +72,7 @@ const SignUpForm = ({ t }) => {
 
         localStorage.setItem('user', JSON.stringify({ token, username }));
 
-        auth.logIn();
+        logIn();
 
         navigate('/', { replace: true });
       } catch (err) {
