@@ -40,7 +40,7 @@ const MessagesField = ({ messages }) => {
           <b>{username}</b>
           :
           &nbsp;
-          {leoFilter.clean(body)}
+          {body}
         </div>
       </React.Fragment>
     ));
@@ -65,7 +65,7 @@ const MessagesForm = ({ t }) => {
       textMessage: '',
     },
     onSubmit: ({ textMessage }) => {
-      addMessage(textMessage);
+      addMessage(leoFilter.clean(textMessage));
       formik.resetForm();
     },
   });
@@ -78,7 +78,7 @@ const MessagesForm = ({ t }) => {
             id="messagesInput"
             name="textMessage"
             onChange={formik.handleChange}
-            value={leoFilter.clean(formik.values.textMessage)}
+            value={formik.values.textMessage}
             autoComplete="off"
             aria-label={t('messages.newMessage')}
             placeholder={t('messages.messagesInput')}

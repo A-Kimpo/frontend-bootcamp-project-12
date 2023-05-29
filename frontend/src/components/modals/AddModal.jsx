@@ -28,12 +28,6 @@ const AddModal = ({ hideModal, t }) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: ({ channelName }) => {
-      const isMoral = leoFilter.clean(channelName).match(/[*]{3,}/gi);
-
-      if (isMoral) {
-        toast.warn(t('toast.moral'), toastifyConfig);
-        return;
-      }
       toast.success(t('toast.add'), toastifyConfig);
       addChannel(leoFilter.clean(channelName));
       hideModal();
@@ -54,7 +48,7 @@ const AddModal = ({ hideModal, t }) => {
               name="channelName"
               type="text"
               placeholder={t('modals.channelName')}
-              value={leoFilter.clean(formik.values.channelName)}
+              value={formik.values.channelName}
               onChange={formik.handleChange}
               isInvalid={formik.errors.channelName}
               autoFocus

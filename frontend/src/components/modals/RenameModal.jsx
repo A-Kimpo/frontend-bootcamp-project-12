@@ -38,14 +38,8 @@ const RenameModal = ({ id, hideModal, t }) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: ({ channelNewName }) => {
-      const isMoral = leoFilter.clean(channelNewName).match(/[*]{3,}/gi);
-
-      if (isMoral) {
-        toast.warn(t('toast.moral'), toastifyConfig);
-        return;
-      }
       toast.success(t('toast.rename'), toastifyConfig);
-      renameChannel(id, channelNewName);
+      renameChannel(id, leoFilter.clean(channelNewName));
       hideModal();
     },
   });
@@ -64,7 +58,7 @@ const RenameModal = ({ id, hideModal, t }) => {
               name="channelNewName"
               type="text"
               placeholder={t('modals.channelName')}
-              value={leoFilter.clean(formik.values.channelNewName)}
+              value={formik.values.channelNewName}
               onChange={formik.handleChange}
               isInvalid={formik.errors.channelNewName}
             />
