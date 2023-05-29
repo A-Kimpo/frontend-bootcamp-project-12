@@ -4,6 +4,8 @@ import { initReactI18next } from 'react-i18next';
 import i18n from 'i18next';
 import { io } from 'socket.io-client';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 import store from './slices';
 import resources from './locales';
@@ -26,6 +28,7 @@ export default async () => {
       <AuthProvider>
         <SocketProvider socket={socket}>
           <App />
+          <ToastContainer />
         </SocketProvider>
       </AuthProvider>
     </Provider>

@@ -16,7 +16,7 @@ import { object, string } from 'yup';
 import { useAuth } from '../providers/AuthProvider.jsx';
 import routes from '../routes.js';
 
-const LoginForm = ({ t }) => {
+const LogInForm = ({ t }) => {
   const [failedLogin, setFailedLogin] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
@@ -88,7 +88,7 @@ const LoginForm = ({ t }) => {
   );
 };
 
-const LoginPage = ({ t }) => {
+const LogInPage = ({ t }) => {
   const { logIn } = useAuth();
   const navigate = useNavigate();
 
@@ -109,7 +109,7 @@ const LoginPage = ({ t }) => {
           <Card className="shadow-sm">
             <Card.Body className="d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
               <Image src="loginImage.jpeg" roundedCircle alt={t('logInPage.header')} />
-              <LoginForm t={t} />
+              <LogInForm t={t} />
             </Card.Body>
             <Card.Footer className="p-4">
               <Container className="text-center">
@@ -125,4 +125,4 @@ const LoginPage = ({ t }) => {
   );
 };
 
-export default LoginPage;
+export default LogInPage;

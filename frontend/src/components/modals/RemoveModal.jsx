@@ -4,6 +4,7 @@ import {
   Form,
   Button,
 } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import { useSocket } from '../../providers/SocketProvider';
 
@@ -17,6 +18,16 @@ const RemoveModal = ({ id, hideModal, t }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    toast.success(t('toast.remove'), {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+    });
     removeChannel(id);
     hideModal();
   };

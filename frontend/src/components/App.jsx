@@ -16,7 +16,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import MainPage from './chat/MainPage';
-import LoginPage from './LoginPage';
+import LogInPage from './LogInPage';
 import SignUpPage from './SignUpPage';
 import Page404 from './Page404';
 import { useAuth } from '../providers/AuthProvider';
@@ -59,7 +59,7 @@ const App = () => {
         <Routes>
           <Route path="*" element={<Page404 t={t} />} />
           <Route path="/signup" element={<SignUpPage t={t} />} />
-          <Route path="/login" element={<LoginPage t={t} />} />
+          <Route path="/login" element={<LogInPage t={t} />} />
           <Route
             path="/"
             element={(
@@ -69,6 +69,7 @@ const App = () => {
             )}
           />
         </Routes>
+
       </div>
     </Router>
   );

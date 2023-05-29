@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { object, string } from 'yup';
+import { toast } from 'react-toastify';
 
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
@@ -38,6 +39,16 @@ const RenameModal = ({ id, hideModal, t }) => {
     },
     validationSchema: modalSchema,
     onSubmit: ({ channelNewName }) => {
+      toast.success(t('toast.rename'), {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
       renameChannel(id, channelNewName);
       hideModal();
     },

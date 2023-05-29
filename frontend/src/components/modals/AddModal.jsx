@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 import { object, string } from 'yup';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
@@ -30,6 +31,16 @@ const AddModal = ({ hideModal, t }) => {
     },
     validationSchema: modalSchema,
     onSubmit: ({ channelName }) => {
+      toast.success(t('toast.add'), {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
       addChannel(channelName);
       hideModal();
     },
