@@ -98,7 +98,7 @@ const LogInPage = ({ t }) => {
       }
     };
     checkAuth();
-  }, []);
+  }, [logIn, navigate]);
 
   return (
     <Container fluid className="h-100">

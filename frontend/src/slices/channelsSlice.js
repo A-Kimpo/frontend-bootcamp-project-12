@@ -12,12 +12,14 @@ const channelsSlice = createSlice({
     addChannels: channelsAdapter.addMany,
     removeChannel: (state, { payload: id }) => {
       if (state.currentChannelId === id) {
+        // eslint-disable-next-line no-param-reassign
         state.currentChannelId = 1;
       }
       channelsAdapter.removeOne(state, id);
     },
     renameChannel: channelsAdapter.updateOne,
     setCurrentChannel: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
       state.currentChannelId = payload;
     },
   },
