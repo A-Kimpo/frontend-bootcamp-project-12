@@ -6,16 +6,26 @@ import {
   Button,
 } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { object, string } from 'yup';
 
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 
-const RenameModal = ({ id, hideModal }) => {
+const RenameModal = ({ id, hideModal, t }) => {
   const { renameChannel } = useSocket();
 
   const { name: targetName } = useSelector(
     (state) => channelsSelectors.selectById(state, id),
   );
+  const channels = useSelector(channelsSelectors.selectAll);
+  const existingNames = channels.map(({ name }) => name);
+
+  const modalSchema = object({
+    channelNewName: string()
+      .min(3, 'errors.length')
+      .max(20, 'errors.length')
+      .notOneOf(existingNames, 'errors.existChannel'),
+  });
 
   useEffect(() => {
     const ref = document.getElementById('channelNewName');
@@ -26,37 +36,41 @@ const RenameModal = ({ id, hideModal }) => {
     initialValues: {
       channelNewName: targetName,
     },
+    validationSchema: modalSchema,
     onSubmit: ({ channelNewName }) => {
       renameChannel(id, channelNewName);
       hideModal();
     },
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
     <Modal show onHide={hideModal} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Rename channel</Modal.Title>
+        <Modal.Title>{t('modals.rename.header')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Control
-              onChange={formik.handleChange}
-              value={formik.values.channelNewName}
-              type="text"
-              name="channelNewName"
               id="channelNewName"
-              placeholder="Channel name"
-              required
+              name="channelNewName"
+              type="text"
+              placeholder={t('modals.channelName')}
+              value={formik.values.channelNewName}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isInvalid={formik.errors.channelNewName}
             />
-            <Form.Label htmlFor="channelNewName" className="visually-hidden">Rename</Form.Label>
-            <Form.Control.Feedback type="invalid">Error</Form.Control.Feedback>
+            <Form.Label htmlFor="channelNewName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
+            <Form.Control.Feedback type="invalid">{t(formik.errors.channelNewName)}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="d-flex justify-content-end">
-            <Button variant="secondary" onClick={hideModal}>Close</Button>
+            <Button variant="secondary" onClick={hideModal}>{t('modals.rename.cancel')}</Button>
             &nbsp;
-            <Button variant="primary" type="submit">Submit</Button>
+            <Button variant="primary" type="submit">{t('modals.rename.submit')}</Button>
           </Form.Group>
         </Form>
       </Modal.Body>

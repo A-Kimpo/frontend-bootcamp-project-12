@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-
 import {
   Modal,
   Form,
@@ -8,7 +7,7 @@ import {
 
 import { useSocket } from '../../providers/SocketProvider';
 
-const RemoveModal = ({ id, hideModal }) => {
+const RemoveModal = ({ id, hideModal, t }) => {
   const { removeChannel } = useSocket();
 
   useEffect(() => {
@@ -25,16 +24,16 @@ const RemoveModal = ({ id, hideModal }) => {
   return (
     <Modal show onHide={hideModal} centered>
       <Modal.Header closeButton>
-        <Modal.Title className="h4">Remove channel</Modal.Title>
+        <Modal.Title className="h4">{t('modals.remove.header')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <p className="lead">Уверены?</p>
+          <p className="lead">{t('modals.remove.warning')}</p>
           <Form.Group className="d-flex justify-content-end">
-            <Button variant="secondary" onClick={hideModal}>Close</Button>
+            <Button variant="secondary" onClick={hideModal}>{t('modals.remove.cancel')}</Button>
             &nbsp;
-            <Button id="submitRemoving" variant="danger" type="submit">Delete</Button>
+            <Button id="submitRemoving" variant="danger" type="submit">{t('modals.remove.submit')}</Button>
           </Form.Group>
         </Form>
       </Modal.Body>

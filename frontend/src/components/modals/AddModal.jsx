@@ -5,16 +5,30 @@ import {
   Form,
   Button,
 } from 'react-bootstrap';
+import { object, string } from 'yup';
+import { useSelector } from 'react-redux';
 
 import { useSocket } from '../../providers/SocketProvider';
+import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 
-const AddModal = ({ hideModal }) => {
+const AddModal = ({ hideModal, t }) => {
   const { addChannel } = useSocket();
+
+  const channels = useSelector(channelsSelectors.selectAll);
+  const existingNames = channels.map(({ name }) => name);
+
+  const modalSchema = object({
+    channelName: string()
+      .min(3, 'errors.length')
+      .max(20, 'errors.length')
+      .notOneOf(existingNames, 'errors.existChannel'),
+  });
 
   const formik = useFormik({
     initialValues: {
       channelName: '',
     },
+    validationSchema: modalSchema,
     onSubmit: ({ channelName }) => {
       addChannel(channelName);
       hideModal();
@@ -24,29 +38,30 @@ const AddModal = ({ hideModal }) => {
   return (
     <Modal show onHide={hideModal} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Add channel</Modal.Title>
+        <Modal.Title>{t('modals.add.header')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Control
-              onChange={formik.handleChange}
-              value={formik.values.channelName}
-              type="text"
-              name="channelName"
               id="channelName"
-              placeholder="Channel name"
-              required
+              name="channelName"
+              type="text"
+              placeholder={t('modals.channelName')}
+              value={formik.values.channelName}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isInvalid={formik.errors.channelName}
               autoFocus
             />
-            <Form.Label htmlFor="channelName" className="visually-hidden">Channel</Form.Label>
-            <Form.Control.Feedback type="invalid">Error</Form.Control.Feedback>
+            <Form.Label htmlFor="channelName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
+            <Form.Control.Feedback type="invalid">{t(formik.errors.channelName)}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="d-flex justify-content-end">
-            <Button variant="secondary" onClick={hideModal}>Close</Button>
+            <Button variant="secondary" onClick={hideModal}>{t('modals.add.cancel')}</Button>
             &nbsp;
-            <Button variant="primary" type="submit">Submit</Button>
+            <Button variant="primary" type="submit">{t('modals.add.submit')}</Button>
           </Form.Group>
         </Form>
       </Modal.Body>
