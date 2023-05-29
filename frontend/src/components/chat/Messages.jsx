@@ -8,6 +8,7 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import leoFilter from 'leo-profanity';
 
 import { useSocket } from '../../providers/SocketProvider';
 
@@ -39,7 +40,7 @@ const MessagesField = ({ messages }) => {
           <b>{username}</b>
           :
           &nbsp;
-          {body}
+          {leoFilter.clean(body)}
         </div>
       </React.Fragment>
     ));
@@ -77,7 +78,7 @@ const MessagesForm = ({ t }) => {
             id="messagesInput"
             name="textMessage"
             onChange={formik.handleChange}
-            value={formik.values.textMessage}
+            value={leoFilter.clean(formik.values.textMessage)}
             autoComplete="off"
             aria-label={t('messages.newMessage')}
             placeholder={t('messages.messagesInput')}

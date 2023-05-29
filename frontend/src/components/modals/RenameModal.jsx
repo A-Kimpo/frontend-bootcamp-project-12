@@ -8,6 +8,7 @@ import {
 import { useSelector } from 'react-redux';
 import { object, string } from 'yup';
 import { toast } from 'react-toastify';
+import leoFilter from 'leo-profanity';
 
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
@@ -39,6 +40,19 @@ const RenameModal = ({ id, hideModal, t }) => {
     },
     validationSchema: modalSchema,
     onSubmit: ({ channelNewName }) => {
+      if (leoFilter.clean(channelNewName).match(/[*]{3,}/gi)) {
+        toast.warn(t('toast.moral'), {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        return;
+      }
       toast.success(t('toast.rename'), {
         position: 'top-right',
         autoClose: 3000,
@@ -70,7 +84,7 @@ const RenameModal = ({ id, hideModal, t }) => {
               name="channelNewName"
               type="text"
               placeholder={t('modals.channelName')}
-              value={formik.values.channelNewName}
+              value={leoFilter.clean(formik.values.channelNewName)}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               isInvalid={formik.errors.channelNewName}

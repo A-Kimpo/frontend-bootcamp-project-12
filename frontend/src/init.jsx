@@ -6,6 +6,7 @@ import { io } from 'socket.io-client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import leoProfanity from 'leo-profanity';
 
 import store from './slices';
 import resources from './locales';
@@ -20,6 +21,8 @@ export default async () => {
       resources,
       debug: true,
     });
+
+  leoProfanity.loadDictionary('ru');
 
   const socket = io();
 

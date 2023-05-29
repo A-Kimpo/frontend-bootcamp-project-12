@@ -8,6 +8,7 @@ import {
 import { object, string } from 'yup';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import leoFilter from 'leo-profanity';
 
 import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
@@ -31,6 +32,19 @@ const AddModal = ({ hideModal, t }) => {
     },
     validationSchema: modalSchema,
     onSubmit: ({ channelName }) => {
+      if (leoFilter.clean(channelName).match(/[*]{3,}/gi)) {
+        toast.warn(t('toast.moral'), {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        return;
+      }
       toast.success(t('toast.add'), {
         position: 'top-right',
         autoClose: 3000,
@@ -41,7 +55,7 @@ const AddModal = ({ hideModal, t }) => {
         progress: undefined,
         theme: 'light',
       });
-      addChannel(channelName);
+      addChannel(leoFilter.clean(channelName));
       hideModal();
     },
   });
@@ -60,7 +74,7 @@ const AddModal = ({ hideModal, t }) => {
               name="channelName"
               type="text"
               placeholder={t('modals.channelName')}
-              value={formik.values.channelName}
+              value={leoFilter.clean(formik.values.channelName)}
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               isInvalid={formik.errors.channelName}
