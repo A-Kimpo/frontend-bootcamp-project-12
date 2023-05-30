@@ -20,11 +20,13 @@ const AddModal = ({ hideModal, t }) => {
   const channels = useSelector(channelsSelectors.selectAll);
   const existingNames = channels.map(({ name }) => name);
 
+  const modalSchema = getModalSchema(existingNames);
+
   const formik = useFormik({
     initialValues: {
       channelName: '',
     },
-    validationSchema: getModalSchema(existingNames),
+    validationSchema: modalSchema,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: ({ channelName }) => {

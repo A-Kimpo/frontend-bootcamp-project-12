@@ -19,7 +19,9 @@ import { getLogInSchema } from '../../validation';
 
 const LogInForm = ({ t }) => {
   const [failedLogIn, setFailedLogIn] = useState(false);
+
   const { logIn } = useAuth();
+
   const navigate = useNavigate();
 
   const formik = useFormik({

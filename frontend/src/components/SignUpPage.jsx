@@ -41,6 +41,7 @@ const SignUpForm = ({ t }) => {
   const [failedSignUp, setFailedSignUp] = useState(false);
 
   const { logIn } = useAuth();
+
   const navigate = useNavigate();
 
   const formik = useFormik({
