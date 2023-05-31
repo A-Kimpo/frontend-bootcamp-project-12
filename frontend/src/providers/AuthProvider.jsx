@@ -17,6 +17,14 @@ const AuthProvider = ({ children }) => {
     return username;
   };
 
+  const getAuthHeaders = () => {
+    const { token } = JSON.parse(localStorage.getItem('user'));
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    return headers;
+  };
+
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
     localStorage.removeItem('user');
@@ -28,6 +36,7 @@ const AuthProvider = ({ children }) => {
     logIn,
     logOut,
     getUserName,
+    getAuthHeaders,
   }));
 
   return (

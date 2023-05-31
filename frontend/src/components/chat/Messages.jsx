@@ -7,9 +7,11 @@ import {
   Form,
   InputGroup,
 } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import leoFilter from 'leo-profanity';
 
+import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import { useSocket } from '../../providers/SocketProvider';
 
 const MessagesHeader = ({ channelName, messagesCount, t }) => (
@@ -77,6 +79,7 @@ const MessagesForm = ({ t }) => {
           <Form.Control
             id="messagesInput"
             name="textMessage"
+            required
             onChange={formik.handleChange}
             value={formik.values.textMessage}
             autoComplete="off"
@@ -98,11 +101,17 @@ const MessagesForm = ({ t }) => {
   );
 };
 
-const Messages = ({ messages, channelName, currentChannelId }) => {
+const Messages = ({ messages, currentChannelId }) => {
   const { t } = useTranslation();
 
   const channelMessages = messages
     .filter(({ channelId }) => Number(channelId) === currentChannelId);
+
+  const currentChannel = useSelector(
+    (state) => channelsSelectors.selectById(state, currentChannelId),
+  );
+
+  const channelName = !currentChannel ? '' : currentChannel.name;
 
   return (
     <Col className="p-0 h-100">
