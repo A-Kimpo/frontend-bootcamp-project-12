@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Container, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { useTranslation } from 'react-i18next';
 
-import routes from '../../routes';
 import { actions as channelsActions, selectors as channelsSelectors } from '../../slices/channelsSlice';
 import { actions as messagesActions, selectors as messagesSelectors } from '../../slices/messagesSlice';
 import Channels from './Channels';
@@ -15,18 +13,16 @@ import { useAuth } from '../../providers/AuthProvider';
 const MainPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { getAuthHeaders, logOut } = useAuth();
+  const { getData, logOut } = useAuth();
 
   useEffect(() => {
     (async () => {
-      const headers = getAuthHeaders();
       try {
-        const { data } = await axios.get(routes.dataPath(), { headers });
-        const { channels, messages, currentChannelId } = data;
+        const { channels, messages, currentChannelId } = await getData();
 
         dispatch(channelsActions.addChannels(channels));
-        dispatch(channelsActions.setCurrentChannel(currentChannelId));
         dispatch(messagesActions.addMessages(messages));
+        dispatch(channelsActions.setCurrentChannel(currentChannelId));
       } catch (err) {
         toast.error(t('errors.authError'));
         logOut();

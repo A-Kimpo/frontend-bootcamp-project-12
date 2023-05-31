@@ -47,12 +47,13 @@ const AuthProvider = ({ children }) => {
     return username;
   };
 
-  const getAuthHeaders = () => {
+  const getData = async () => {
     const { token } = JSON.parse(localStorage.getItem('user'));
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-    return headers;
+    const { data } = await axios.get(routes.dataPath(), { headers });
+    return data;
   };
 
   const memo = useMemo(() => ({
@@ -62,7 +63,7 @@ const AuthProvider = ({ children }) => {
     logOut,
     checkAuth,
     getUserName,
-    getAuthHeaders,
+    getData,
   }));
 
   return (
