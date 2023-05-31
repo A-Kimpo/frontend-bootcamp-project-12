@@ -24,8 +24,8 @@ const RemovableChannel = ({
       <span className="visually-hidden">{t('channels.channelControl')}</span>
     </Dropdown.Toggle>
     <Dropdown.Menu>
-      <Dropdown.Item onClick={() => showModal('removing', id)}>{t('channels.remove')}</Dropdown.Item>
-      <Dropdown.Item onClick={() => showModal('renaming', id)}>{t('channels.rename')}</Dropdown.Item>
+      <Dropdown.Item onClick={() => showModal('remove', id)}>{t('channels.remove')}</Dropdown.Item>
+      <Dropdown.Item onClick={() => showModal('rename', id)}>{t('channels.rename')}</Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
 );
@@ -33,7 +33,7 @@ const RemovableChannel = ({
 const ChannelsHeader = ({ showModal, t }) => (
   <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
     <b>{t('channels.header')}</b>
-    <Button onClick={() => showModal('adding')} type="button" variant="group-vertical" className="p-0 text-primary">
+    <Button onClick={() => showModal('add')} type="button" variant="group-vertical" className="p-0 text-primary">
       <Image src="addChannel.svg" />
       <span className="visually-hidden">+</span>
     </Button>
@@ -77,13 +77,15 @@ const ChannelsField = ({
   );
 };
 
-const renderModal = ({ modalInfo, hideModal, t }) => {
-  if (!modalInfo.type) {
+const RenderModal = ({ modalInfo, hideModal, t }) => {
+  const { type, channelId } = modalInfo;
+
+  if (!type) {
     return null;
   }
 
-  const Component = getModal(modalInfo.type);
-  return <Component id={modalInfo.channelId} hideModal={hideModal} t={t} />;
+  const Component = getModal(type);
+  return <Component id={channelId} type={type} hideModal={hideModal} t={t} />;
 };
 
 const Channels = ({ channels, currentChannelId }) => {
@@ -102,7 +104,7 @@ const Channels = ({ channels, currentChannelId }) => {
         showModal={showModal}
         t={t}
       />
-      {renderModal({ modalInfo, hideModal, t })}
+      {RenderModal({ modalInfo, hideModal, t })}
     </Col>
   );
 };

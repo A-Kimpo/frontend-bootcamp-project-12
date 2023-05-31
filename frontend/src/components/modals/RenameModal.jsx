@@ -1,10 +1,5 @@
 import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
-import {
-  Modal,
-  Form,
-  Button,
-} from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import leoFilter from 'leo-profanity';
@@ -13,8 +8,11 @@ import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import toastifyConfig from '../../toastifyConfig';
 import { getModalSchema } from '../../validation';
+import ModalBuilder from './ModalBuilder';
 
-const RenameModal = ({ id, hideModal, t }) => {
+const RenameModal = ({
+  id, hideModal, t, type,
+}) => {
   const { renameChannel } = useSocket();
 
   const { name: targetName } = useSelector(
@@ -23,57 +21,26 @@ const RenameModal = ({ id, hideModal, t }) => {
   const channels = useSelector(channelsSelectors.selectAll);
   const existingNames = channels.map(({ name }) => name);
 
-  const modalSchema = getModalSchema(existingNames);
-
   useEffect(() => {
-    const ref = document.getElementById('channelNewName');
+    const ref = document.getElementById('channelName');
     ref.select();
   }, []);
 
   const formik = useFormik({
     initialValues: {
-      channelNewName: targetName,
+      channelName: targetName,
     },
-    validationSchema: modalSchema,
+    validationSchema: getModalSchema(existingNames),
     validateOnBlur: false,
     validateOnChange: false,
-    onSubmit: ({ channelNewName }) => {
+    onSubmit: ({ channelName }) => {
       toast.success(t('toast.rename'), toastifyConfig);
-      renameChannel(id, leoFilter.clean(channelNewName));
+      renameChannel(id, leoFilter.clean(channelName));
       hideModal();
     },
   });
 
-  return (
-    <Modal show onHide={hideModal} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>{t('modals.rename.header')}</Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body>
-        <Form onSubmit={formik.handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Control
-              id="channelNewName"
-              name="channelNewName"
-              type="text"
-              placeholder={t('modals.channelName')}
-              value={formik.values.channelNewName}
-              onChange={formik.handleChange}
-              isInvalid={formik.errors.channelNewName}
-            />
-            <Form.Label htmlFor="channelNewName" className="visually-hidden">{t('modals.channelName')}</Form.Label>
-            <Form.Control.Feedback type="invalid">{t(formik.errors.channelNewName)}</Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group className="d-flex justify-content-end">
-            <Button variant="secondary" onClick={hideModal}>{t('modals.rename.cancel')}</Button>
-            &nbsp;
-            <Button variant="primary" type="submit">{t('modals.rename.submit')}</Button>
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-    </Modal>
-  );
+  return <ModalBuilder type={type} formik={formik} hideModal={hideModal} t={t} />;
 };
 
 export default RenameModal;

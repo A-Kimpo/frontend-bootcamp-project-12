@@ -3,9 +3,9 @@ import RemoveModal from './RemoveModal';
 import RenameModal from './RenameModal';
 
 const modalsMap = {
-  adding: AddModal,
-  removing: RemoveModal,
-  renaming: RenameModal,
+  add: AddModal,
+  remove: RemoveModal,
+  rename: RenameModal,
 };
 
 export default (modalType) => modalsMap[modalType];
