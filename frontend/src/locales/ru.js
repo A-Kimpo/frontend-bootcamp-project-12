@@ -11,6 +11,7 @@ export default {
       existUser: 'Такой пользователь уже существует',
       existChannel: 'Канал с таким именем уже существует',
       networkError: 'Ошибка сети',
+      authError: 'Ошибка авторизации',
       serverError: 'Ошибка сервера',
     },
     logInPage: {
@@ -72,7 +73,6 @@ export default {
       add: 'Канал создан',
       remove: 'Канал удалён',
       rename: 'Канал переименован',
-      moral: 'Материться не хорошо!',
     },
   },
 };

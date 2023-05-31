@@ -3,8 +3,8 @@ import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 
-import { useAuth } from '../providers/AuthProvider';
-import { getSignUpSchema } from '../validation';
+import { useAuth } from '../../providers/AuthProvider';
+import { getSignUpSchema } from '../../validation';
 import AuthPagesInner from './AuthPagesInner';
 
 const SignUpInput = ({

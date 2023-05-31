@@ -15,6 +15,33 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const makeRequest = async (route, { username, password }) => {
+    const { data: { token } } = await axios.post(route, { username, password });
+    localStorage.setItem('user', JSON.stringify({ token, username }));
+    setLoggedIn(true);
+  };
+
+  const logIn = async (userData) => {
+    await makeRequest(routes.logInPath(), userData);
+  };
+
+  const signUp = async (userData) => {
+    await makeRequest(routes.signUpPath(), userData);
+  };
+
+  const logOut = () => {
+    localStorage.removeItem('user');
+    setLoggedIn(false);
+  };
+
+  const checkAuth = () => {
+    if (localStorage.getItem('user')) {
+      setLoggedIn(true);
+      return true;
+    }
+    return false;
+  };
+
   const getUserName = () => {
     const { username } = JSON.parse(localStorage.getItem('user'));
     return username;
@@ -28,41 +55,12 @@ const AuthProvider = ({ children }) => {
     return headers;
   };
 
-  const logIn = async ({ username, password }) => {
-    const { data: { token } } = await axios.post(routes.logInPath(), { username, password });
-
-    localStorage.setItem('user', JSON.stringify({ token, username }));
-
-    setLoggedIn(true);
-  };
-
-  const signUp = async ({ username, password }) => {
-    const { data: { token } } = await axios.post(routes.signUpPath(), { username, password });
-
-    localStorage.setItem('user', JSON.stringify({ token, username }));
-
-    setLoggedIn(true);
-  };
-
-  const checkAuth = () => {
-    if (localStorage.getItem('user')) {
-      setLoggedIn(true);
-      return true;
-    }
-    return false;
-  };
-
-  const logOut = () => {
-    localStorage.removeItem('user');
-    setLoggedIn(false);
-  };
-
   const memo = useMemo(() => ({
     loggedIn,
     logIn,
     signUp,
-    checkAuth,
     logOut,
+    checkAuth,
     getUserName,
     getAuthHeaders,
   }));

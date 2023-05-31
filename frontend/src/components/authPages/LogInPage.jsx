@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 import { useAuth } from '../../providers/AuthProvider';
 import { getLogInSchema } from '../../validation';
-import AuthPagesInner from '../AuthPagesInner';
+import AuthPagesInner from './AuthPagesInner';
 
 const LogInForm = ({ t }) => {
   const [failedLogIn, setFailedLogIn] = useState(false);
@@ -30,7 +30,7 @@ const LogInForm = ({ t }) => {
         navigate('/', { replace: true });
       } catch (err) {
         formik.setSubmitting(false);
-        console.log(err);
+
         if (err.code === 'ERR_NETWORK') {
           toast.error(t('errors.networkError'));
         }
