@@ -20,6 +20,17 @@ import LogInPage from './login/LogInPage';
 import SignUpPage from './SignUpPage';
 import Page404 from './Page404';
 import { useAuth } from '../providers/AuthProvider';
+import routes from '../routes';
+
+const AppNavBar = ({ t }) => (
+  <Navbar expand="lg" bg="white" className="shadow-sm">
+    <Container>
+      <Navbar.Brand as={Link} to="/">{t('appName')}</Navbar.Brand>
+      <Nav className="mr-auto" />
+      <AuthButton t={t} />
+    </Container>
+  </Navbar>
+);
 
 const AuthButton = ({ t }) => {
   const { loggedIn, logOut } = useAuth();
@@ -48,20 +59,13 @@ const App = () => {
   return (
     <Router>
       <div className="d-flex flex-column h-100">
-        <Navbar expand="lg" bg="white" className="shadow-sm">
-          <Container>
-            <Navbar.Brand as={Link} to="/">{t('appName')}</Navbar.Brand>
-            <Nav className="mr-auto" />
-            <AuthButton t={t} />
-          </Container>
-        </Navbar>
-
+        <AppNavBar t={t} />
         <Routes>
-          <Route path="*" element={<Page404 t={t} />} />
-          <Route path="/signup" element={<SignUpPage t={t} />} />
-          <Route path="/login" element={<LogInPage t={t} />} />
+          <Route path={routes.notFoundPage()} element={<Page404 t={t} />} />
+          <Route path={routes.signUpPage()} element={<SignUpPage t={t} />} />
+          <Route path={routes.logInPage()} element={<LogInPage t={t} />} />
           <Route
-            path="/"
+            path={routes.mainPage()}
             element={(
               <PrivateRoute>
                 <MainPage />
