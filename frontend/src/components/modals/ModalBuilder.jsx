@@ -4,9 +4,10 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import ModalInput from './ModalInput';
 
 const ModalBuilder = ({
-  handleSubmit, hideModal, t, type, formik = null,
+  handleSubmit, hideModal, t, type, formik,
 }) => {
   const isRemove = type === 'remove';
+
   return (
     <Modal show onHide={hideModal} centered>
       <Modal.Header closeButton>

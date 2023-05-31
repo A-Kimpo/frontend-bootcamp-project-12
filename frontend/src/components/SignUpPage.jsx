@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-import {
-  Form,
-  Button,
-  Alert,
-} from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import axios from 'axios';
 
-import routes from '../routes';
 import { useAuth } from '../providers/AuthProvider';
 import { getSignUpSchema } from '../validation';
 import AuthPagesInner from './AuthPagesInner';
 
-const SignUpInput = ({ formik, variant, t }) => (
+const SignUpInput = ({
+  formik, variant, t, failedSignUp,
+}) => (
   <Form.Floating className="mb-3">
     <Form.Control
       id={`${variant}`}
@@ -26,17 +22,17 @@ const SignUpInput = ({ formik, variant, t }) => (
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
       value={formik.values[variant]}
-      isInvalid={formik.errors[variant] && formik.touched[variant]}
+      isInvalid={(formik.errors[variant] && formik.touched[variant]) || failedSignUp}
     />
     <Form.Label htmlFor={`${variant}`}>{t(`signUpPage.${variant}`)}</Form.Label>
-    <Form.Control.Feedback type="invalid" placement="right" tooltip>{t(formik.errors[variant])}</Form.Control.Feedback>
+    <Form.Control.Feedback type="invalid" placement="right" tooltip>{failedSignUp ? t('errors.existUser') : t(formik.errors[variant])}</Form.Control.Feedback>
   </Form.Floating>
 );
 
 const SignUpForm = ({ t }) => {
   const [failedSignUp, setFailedSignUp] = useState(false);
 
-  const { logIn } = useAuth();
+  const { signUp } = useAuth();
 
   const navigate = useNavigate();
 
@@ -48,32 +44,24 @@ const SignUpForm = ({ t }) => {
     },
     validationSchema: getSignUpSchema(),
     onSubmit: async (values) => {
-      const { username, password } = values;
       try {
-        const { data: { token } } = await axios.post(routes.signUpPath(), { username, password });
-
-        localStorage.setItem('user', JSON.stringify({ token, username }));
-
-        logIn();
-
+        await signUp(values);
         navigate('/', { replace: true });
       } catch (err) {
         formik.setSubmitting(false);
-        return err.response.status === 409
-          ? setFailedSignUp(true)
-          : null;
+        if (err.response.status === 409) {
+          setFailedSignUp(true);
+        }
       }
-      return null;
     },
   });
 
   return (
     <Form onSubmit={formik.handleSubmit} className="w-50">
       <h1 className="text-center mb-4">{t('signUpPage.header')}</h1>
-      <SignUpInput formik={formik} t={t} variant="username" />
+      <SignUpInput failedSignUp={failedSignUp} formik={formik} t={t} variant="username" />
       <SignUpInput formik={formik} t={t} variant="password" />
       <SignUpInput formik={formik} t={t} variant="confirmPassword" />
-      {failedSignUp ? <Alert variant="danger">{t('errors.existUser')}</Alert> : null}
       <Button type="submit" variant="outline-primary" className="w-100">{t('signUpPage.submit')}</Button>
     </Form>
   );

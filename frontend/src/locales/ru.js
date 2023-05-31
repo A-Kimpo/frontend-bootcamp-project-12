@@ -11,6 +11,7 @@ export default {
       existUser: 'Такой пользователь уже существует',
       existChannel: 'Канал с таким именем уже существует',
       networkError: 'Ошибка сети',
+      serverError: 'Ошибка сервера',
     },
     logInPage: {
       header: 'Войти',

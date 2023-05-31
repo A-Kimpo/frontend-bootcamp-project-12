@@ -4,6 +4,9 @@ import React, {
   useContext,
   useMemo,
 } from 'react';
+import axios from 'axios';
+
+import routes from '../routes';
 
 const AuthContext = createContext({});
 
@@ -25,7 +28,30 @@ const AuthProvider = ({ children }) => {
     return headers;
   };
 
-  const logIn = () => setLoggedIn(true);
+  const logIn = async ({ username, password }) => {
+    const { data: { token } } = await axios.post(routes.logInPath(), { username, password });
+
+    localStorage.setItem('user', JSON.stringify({ token, username }));
+
+    setLoggedIn(true);
+  };
+
+  const signUp = async ({ username, password }) => {
+    const { data: { token } } = await axios.post(routes.signUpPath(), { username, password });
+
+    localStorage.setItem('user', JSON.stringify({ token, username }));
+
+    setLoggedIn(true);
+  };
+
+  const checkAuth = () => {
+    if (localStorage.getItem('user')) {
+      setLoggedIn(true);
+      return true;
+    }
+    return false;
+  };
+
   const logOut = () => {
     localStorage.removeItem('user');
     setLoggedIn(false);
@@ -34,6 +60,8 @@ const AuthProvider = ({ children }) => {
   const memo = useMemo(() => ({
     loggedIn,
     logIn,
+    signUp,
+    checkAuth,
     logOut,
     getUserName,
     getAuthHeaders,

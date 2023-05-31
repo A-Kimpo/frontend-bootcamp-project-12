@@ -6,9 +6,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 
-import routes from '../../routes';
 import { useAuth } from '../../providers/AuthProvider';
 import { getLogInSchema } from '../../validation';
 import AuthPagesInner from '../AuthPagesInner';
@@ -27,24 +25,22 @@ const LogInForm = ({ t }) => {
     },
     validationSchema: getLogInSchema(),
     onSubmit: async (values) => {
-      const { username } = values;
       try {
-        const { data: { token } } = await axios.post(routes.logInPath(), values);
-
-        localStorage.setItem('user', JSON.stringify({ token, username }));
-
-        logIn();
-
+        await logIn(values);
         navigate('/', { replace: true });
       } catch (err) {
-        if (err.message === 'Network Error') {
+        formik.setSubmitting(false);
+        console.log(err);
+        if (err.code === 'ERR_NETWORK') {
           toast.error(t('errors.networkError'));
         }
-        return err.response.status === 401
-          ? setFailedLogIn(true)
-          : setFailedLogIn(false);
+        if (err.response.status === 500) {
+          toast.error(t('errors.serverError'));
+        }
+        if (err.response.status === 401) {
+          setFailedLogIn(true);
+        }
       }
-      return null;
     },
   });
 
@@ -75,7 +71,7 @@ const LogInForm = ({ t }) => {
           isInvalid={failedLogIn}
         />
         <Form.Label htmlFor="password">{t('logInPage.password')}</Form.Label>
-        <Form.Control.Feedback type="invalid">
+        <Form.Control.Feedback type="invalid" tooltip>
           {t('errors.unauthorized')}
         </Form.Control.Feedback>
       </Form.Floating>
@@ -85,18 +81,12 @@ const LogInForm = ({ t }) => {
 };
 
 const LogInPage = ({ t }) => {
-  const { logIn } = useAuth();
+  const { checkAuth } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = () => {
-      if (localStorage.getItem('user')) {
-        logIn();
-        navigate('/', { replace: true });
-      }
-    };
-    checkAuth();
-  }, [logIn, navigate]);
+    if (checkAuth()) navigate('/', { replace: true });
+  }, []);
 
   return (
     <AuthPagesInner t={t} type="logIn">
