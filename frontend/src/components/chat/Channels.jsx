@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import {
   Button,
@@ -11,7 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { actions as channelsActions } from '../../slices/channelsSlice';
-import getModal from '../modals';
+import { actions as modalsActions } from '../../slices/modalsSlice';
 
 const UnremovableChannel = ({ children }) => (children);
 
@@ -77,23 +77,10 @@ const ChannelsField = ({
   );
 };
 
-const RenderModal = ({ modalInfo, hideModal, t }) => {
-  const { type, channelId } = modalInfo;
-
-  if (!type) {
-    return null;
-  }
-
-  const Component = getModal(type);
-  return <Component id={channelId} type={type} hideModal={hideModal} t={t} />;
-};
-
 const Channels = ({ channels, currentChannelId }) => {
   const { t } = useTranslation();
-
-  const [modalInfo, setModalInfo] = useState({ type: null, channelId: null });
-  const hideModal = () => setModalInfo({ type: null, channelId: null });
-  const showModal = (type, channelId = null) => setModalInfo({ type, channelId });
+  const dispatch = useDispatch();
+  const showModal = (type, id = null) => dispatch(modalsActions.openModal({ type, id }));
 
   return (
     <Col xs={4} md={2} className="border-end px-0 bg-light flex-column h-100 d-flex">
@@ -104,7 +91,6 @@ const Channels = ({ channels, currentChannelId }) => {
         showModal={showModal}
         t={t}
       />
-      {RenderModal({ modalInfo, hideModal, t })}
     </Col>
   );
 };

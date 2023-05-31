@@ -15,6 +15,7 @@ import {
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
+import ModalSwitcher from './modals';
 import MainPage from './chat/MainPage';
 import LogInPage from './authPages/LogInPage';
 import SignUpPage from './authPages/SignUpPage';
@@ -73,7 +74,7 @@ const App = () => {
             )}
           />
         </Routes>
-
+        <ModalSwitcher />
       </div>
     </Router>
   );

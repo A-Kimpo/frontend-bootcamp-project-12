@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   Button,
   Image,
@@ -10,9 +10,11 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import leoFilter from 'leo-profanity';
+import { toast } from 'react-toastify';
 
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import { useSocket } from '../../providers/SocketProvider';
+import toastifyConfig from '../../toastifyConfig';
 
 const MessagesHeader = ({ channelName, messagesCount, t }) => (
   <div className="bg-light mb-4 p-3 shadow-sm small">
@@ -56,10 +58,10 @@ const MessagesField = ({ messages }) => {
 
 const MessagesForm = ({ t }) => {
   const { addMessage } = useSocket();
+  const messagesInputRef = useRef();
 
   useEffect(() => {
-    const messagesInput = document.getElementById('messagesInput');
-    messagesInput.focus();
+    messagesInputRef.current.focus();
   });
 
   const formik = useFormik({
@@ -67,8 +69,12 @@ const MessagesForm = ({ t }) => {
       textMessage: '',
     },
     onSubmit: ({ textMessage }) => {
-      addMessage(leoFilter.clean(textMessage));
-      formik.resetForm();
+      try {
+        addMessage(leoFilter.clean(textMessage));
+        formik.resetForm();
+      } catch (err) {
+        toast.error(t('errors.networkError'), toastifyConfig);
+      }
     },
   });
 
@@ -80,6 +86,7 @@ const MessagesForm = ({ t }) => {
             id="messagesInput"
             name="textMessage"
             required
+            ref={messagesInputRef}
             onChange={formik.handleChange}
             value={formik.values.textMessage}
             autoComplete="off"
@@ -116,7 +123,11 @@ const Messages = ({ messages, currentChannelId }) => {
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
-        <MessagesHeader channelName={channelName} messagesCount={channelMessages.length} t={t} />
+        <MessagesHeader
+          channelName={channelName}
+          messagesCount={channelMessages.length}
+          t={t}
+        />
         <MessagesField messages={channelMessages} />
         <MessagesForm t={t} />
       </div>
