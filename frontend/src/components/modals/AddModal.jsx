@@ -10,7 +10,7 @@ import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import { getModalSchema } from '../../validation';
 import ModalBuilder from './ModalBuilder';
 
-const AddModal = ({ hideModal, t, type }) => {
+const AddModal = ({ hideModal, t }) => {
   const { addChannel } = useSocket();
 
   const channels = useSelector(channelsSelectors.selectAll);
@@ -24,13 +24,17 @@ const AddModal = ({ hideModal, t, type }) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: ({ channelName }) => {
-      toast.success(t('toast.add'), toastifyConfig);
-      addChannel(leoFilter.clean(channelName));
-      hideModal();
+      try {
+        toast.success(t('toast.add'), toastifyConfig);
+        addChannel(leoFilter.clean(channelName));
+        hideModal();
+      } catch (err) {
+        toast.error(t('errors.networkError'), toastifyConfig);
+      }
     },
   });
 
-  return <ModalBuilder type={type} formik={formik} hideModal={hideModal} t={t} />;
+  return <ModalBuilder formik={formik} />;
 };
 
 export default AddModal;

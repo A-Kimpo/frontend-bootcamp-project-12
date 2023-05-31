@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -10,9 +10,7 @@ import toastifyConfig from '../../toastifyConfig';
 import { getModalSchema } from '../../validation';
 import ModalBuilder from './ModalBuilder';
 
-const RenameModal = ({
-  id, hideModal, t, type,
-}) => {
+const RenameModal = ({ id, hideModal, t }) => {
   const { renameChannel } = useSocket();
 
   const { name: targetName } = useSelector(
@@ -20,11 +18,6 @@ const RenameModal = ({
   );
   const channels = useSelector(channelsSelectors.selectAll);
   const existingNames = channels.map(({ name }) => name);
-
-  useEffect(() => {
-    const ref = document.getElementById('channelName');
-    ref.select();
-  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -34,13 +27,17 @@ const RenameModal = ({
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: ({ channelName }) => {
-      toast.success(t('toast.rename'), toastifyConfig);
-      renameChannel(id, leoFilter.clean(channelName));
-      hideModal();
+      try {
+        toast.success(t('toast.rename'), toastifyConfig);
+        renameChannel(id, leoFilter.clean(channelName));
+        hideModal();
+      } catch (err) {
+        toast.error(t('errors.networkError'), toastifyConfig);
+      }
     },
   });
 
-  return <ModalBuilder type={type} formik={formik} hideModal={hideModal} t={t} />;
+  return <ModalBuilder formik={formik} />;
 };
 
 export default RenameModal;
