@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Container,
-  Row,
-  Col,
-  Card,
   Form,
   Button,
-  Image,
 } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -16,6 +11,7 @@ import axios from 'axios';
 import routes from '../../routes';
 import { useAuth } from '../../providers/AuthProvider';
 import { getLogInSchema } from '../../validation';
+import AuthPagesInner from '../AuthPagesInner';
 
 const LogInForm = ({ t }) => {
   const [failedLogIn, setFailedLogIn] = useState(false);
@@ -103,25 +99,9 @@ const LogInPage = ({ t }) => {
   }, [logIn, navigate]);
 
   return (
-    <Container fluid className="h-100">
-      <Row className="justify-content-center align-content-center h-100">
-        <Col xs={12} md={8} xxl={6}>
-          <Card className="shadow-sm">
-            <Card.Body className="d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
-              <Image src="loginImage.jpeg" roundedCircle alt={t('logInPage.header')} />
-              <LogInForm t={t} />
-            </Card.Body>
-            <Card.Footer className="p-4">
-              <Container className="text-center">
-                <span>{t('logInPage.nullAccount')}</span>
-                &nbsp;
-                <Link to="/signup">{t('logInPage.signUpLink')}</Link>
-              </Container>
-            </Card.Footer>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <AuthPagesInner t={t} type="logIn">
+      <LogInForm t={t} />
+    </AuthPagesInner>
   );
 };
 

@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Container,
-  Row,
-  Col,
-  Card,
   Form,
   Button,
-  Image,
   Alert,
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +11,7 @@ import axios from 'axios';
 import routes from '../routes';
 import { useAuth } from '../providers/AuthProvider';
 import { getSignUpSchema } from '../validation';
+import AuthPagesInner from './AuthPagesInner';
 
 const SignUpInput = ({ formik, variant, t }) => (
   <Form.Floating className="mb-3">
@@ -53,7 +49,6 @@ const SignUpForm = ({ t }) => {
     validationSchema: getSignUpSchema(),
     onSubmit: async (values) => {
       const { username, password } = values;
-
       try {
         const { data: { token } } = await axios.post(routes.signUpPath(), { username, password });
 
@@ -85,18 +80,9 @@ const SignUpForm = ({ t }) => {
 };
 
 const SignUpPage = ({ t }) => (
-  <Container fluid className="h-100">
-    <Row className="justify-content-center align-content-center h-100">
-      <Col xs={12} md={8} xxl={6}>
-        <Card className="shadow-sm">
-          <Card.Body className="d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
-            <Image src="signUpImage.jpg" roundedCircle alt={t('signUpPage.header')} />
-            <SignUpForm t={t} />
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
-  </Container>
+  <AuthPagesInner t={t} type="signUp">
+    <SignUpForm t={t} />
+  </AuthPagesInner>
 );
 
 export default SignUpPage;
