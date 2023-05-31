@@ -20,7 +20,7 @@ export const getSignUpSchema = () => object({
 });
 
 export const getModalSchema = (existingNames) => object({
-  channelNewName: string()
+  channelName: string()
     .min(3, 'errors.length')
     .max(20, 'errors.length')
     .notOneOf(existingNames, 'errors.existChannel'),
