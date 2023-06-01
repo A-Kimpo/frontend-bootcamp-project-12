@@ -13,6 +13,7 @@ import leoFilter from 'leo-profanity';
 import { toast } from 'react-toastify';
 
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
+import { selectors as messagesSelectors } from '../../slices/messagesSlice';
 import { useSocket } from '../../providers/SocketProvider';
 import toastifyConfig from '../../toastifyConfig';
 
@@ -108,8 +109,10 @@ const MessagesForm = ({ t }) => {
   );
 };
 
-const Messages = ({ messages, currentChannelId }) => {
+const Messages = () => {
   const { t } = useTranslation();
+  const messages = useSelector(messagesSelectors.selectAll);
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
 
   const channelMessages = messages
     .filter(({ channelId }) => Number(channelId) === currentChannelId);
@@ -123,11 +126,7 @@ const Messages = ({ messages, currentChannelId }) => {
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
-        <MessagesHeader
-          channelName={channelName}
-          messagesCount={channelMessages.length}
-          t={t}
-        />
+        <MessagesHeader channelName={channelName} messagesCount={channelMessages.length} t={t} />
         <MessagesField messages={channelMessages} />
         <MessagesForm t={t} />
       </div>

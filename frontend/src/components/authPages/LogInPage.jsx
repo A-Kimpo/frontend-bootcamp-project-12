@@ -5,11 +5,11 @@ import {
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
 
 import { useAuth } from '../../providers/AuthProvider';
 import { getLogInSchema } from '../../validation';
 import AuthPagesInner from './AuthPagesInner';
+import handleError from '../../handleError';
 
 const LogInForm = ({ t }) => {
   const [failedLogIn, setFailedLogIn] = useState(false);
@@ -27,16 +27,13 @@ const LogInForm = ({ t }) => {
     onSubmit: async (values) => {
       try {
         await logIn(values);
+
         navigate('/', { replace: true });
       } catch (err) {
         formik.setSubmitting(false);
 
-        if (err.code === 'ERR_NETWORK') {
-          toast.error(t('errors.networkError'));
-        }
-        if (err.response.status === 500) {
-          toast.error(t('errors.serverError'));
-        }
+        handleError(err, t);
+
         if (err.response.status === 401) {
           setFailedLogIn(true);
         }

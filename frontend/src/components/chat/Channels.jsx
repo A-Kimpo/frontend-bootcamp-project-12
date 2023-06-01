@@ -1,5 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Col,
@@ -8,9 +9,8 @@ import {
   Dropdown,
   Image,
 } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
 
-import { actions as channelsActions } from '../../slices/channelsSlice';
+import { actions as channelsActions, selectors as channelsSelectors } from '../../slices/channelsSlice';
 import { actions as modalsActions } from '../../slices/modalsSlice';
 
 const UnremovableChannel = ({ children }) => (children);
@@ -40,10 +40,10 @@ const ChannelsHeader = ({ showModal, t }) => (
   </div>
 );
 
-const ChannelsField = ({
-  channels, currentChannelId, showModal, t,
-}) => {
+const ChannelsField = ({ showModal, t }) => {
   const dispatch = useDispatch();
+  const channels = useSelector(channelsSelectors.selectAll);
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
 
   const renderChannels = channels
     .map(({ id, name, removable }) => {
@@ -77,7 +77,7 @@ const ChannelsField = ({
   );
 };
 
-const Channels = ({ channels, currentChannelId }) => {
+const Channels = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const showModal = (type, id = null) => dispatch(modalsActions.openModal({ type, id }));
@@ -85,12 +85,7 @@ const Channels = ({ channels, currentChannelId }) => {
   return (
     <Col xs={4} md={2} className="border-end px-0 bg-light flex-column h-100 d-flex">
       <ChannelsHeader showModal={showModal} t={t} />
-      <ChannelsField
-        channels={channels}
-        currentChannelId={currentChannelId}
-        showModal={showModal}
-        t={t}
-      />
+      <ChannelsField showModal={showModal} t={t} />
     </Col>
   );
 };

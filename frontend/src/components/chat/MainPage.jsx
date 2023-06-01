@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Container, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
-import { actions as channelsActions, selectors as channelsSelectors } from '../../slices/channelsSlice';
-import { actions as messagesActions, selectors as messagesSelectors } from '../../slices/messagesSlice';
+import { actions as channelsActions } from '../../slices/channelsSlice';
+import { actions as messagesActions } from '../../slices/messagesSlice';
 import Channels from './Channels';
 import Messages from './Messages';
 import { useAuth } from '../../providers/AuthProvider';
@@ -30,15 +30,11 @@ const MainPage = () => {
     })();
   }, [dispatch]);
 
-  const channels = useSelector(channelsSelectors.selectAll);
-  const messages = useSelector(messagesSelectors.selectAll);
-  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
-
   return (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">
       <Row className="h-100 bg-white flex-md-row">
-        <Channels channels={channels} currentChannelId={currentChannelId} />
-        <Messages messages={messages} currentChannelId={currentChannelId} />
+        <Channels />
+        <Messages />
       </Row>
     </Container>
   );

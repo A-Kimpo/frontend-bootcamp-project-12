@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 import { useAuth } from '../../providers/AuthProvider';
 import { getSignUpSchema } from '../../validation';
 import AuthPagesInner from './AuthPagesInner';
+import handleError from '../../handleError';
 
 const SignUpInput = ({
   formik, variant, t, failedSignUp,
@@ -25,7 +26,13 @@ const SignUpInput = ({
       isInvalid={(formik.errors[variant] && formik.touched[variant]) || failedSignUp}
     />
     <Form.Label htmlFor={`${variant}`}>{t(`signUpPage.${variant}`)}</Form.Label>
-    <Form.Control.Feedback type="invalid" placement="right" tooltip>{failedSignUp ? t('errors.existUser') : t(formik.errors[variant])}</Form.Control.Feedback>
+    <Form.Control.Feedback
+      type="invalid"
+      placement="right"
+      tooltip
+    >
+      {failedSignUp ? t('errors.existUser') : t(formik.errors[variant])}
+    </Form.Control.Feedback>
   </Form.Floating>
 );
 
@@ -46,9 +53,13 @@ const SignUpForm = ({ t }) => {
     onSubmit: async (values) => {
       try {
         await signUp(values);
+
         navigate('/', { replace: true });
       } catch (err) {
         formik.setSubmitting(false);
+
+        handleError(err, t);
+
         if (err.response.status === 409) {
           setFailedSignUp(true);
         }
