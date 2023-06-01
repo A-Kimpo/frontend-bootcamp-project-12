@@ -9,6 +9,7 @@ import { useSocket } from '../../providers/SocketProvider';
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import { getModalSchema } from '../../validation';
 import ModalBuilder from './ModalBuilder';
+import handleError from '../../handleError';
 
 const AddModal = ({ hideModal, t }) => {
   const { addChannel } = useSocket();
@@ -29,7 +30,7 @@ const AddModal = ({ hideModal, t }) => {
         addChannel(leoFilter.clean(channelName));
         hideModal();
       } catch (err) {
-        toast.error(t('errors.networkError'), toastifyConfig);
+        handleError(err, t);
       }
     },
   });

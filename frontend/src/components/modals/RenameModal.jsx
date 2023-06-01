@@ -9,6 +9,7 @@ import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import toastifyConfig from '../../toastifyConfig';
 import { getModalSchema } from '../../validation';
 import ModalBuilder from './ModalBuilder';
+import handleError from '../../handleError';
 
 const RenameModal = ({ id, hideModal, t }) => {
   const { renameChannel } = useSocket();
@@ -32,7 +33,7 @@ const RenameModal = ({ id, hideModal, t }) => {
         renameChannel(id, leoFilter.clean(channelName));
         hideModal();
       } catch (err) {
-        toast.error(t('errors.networkError'), toastifyConfig);
+        handleError(err, t);
       }
     },
   });
