@@ -13,6 +13,7 @@ export default {
       networkError: 'Ошибка сети',
       authError: 'Ошибка авторизации',
       serverError: 'Ошибка сервера',
+      unknownError: 'Неизвестная ошибка',
     },
     logInPage: {
       header: 'Войти',
