@@ -10,12 +10,11 @@ import {
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import leoFilter from 'leo-profanity';
-import { toast } from 'react-toastify';
 
 import { selectors as channelsSelectors } from '../../slices/channelsSlice';
 import { selectors as messagesSelectors } from '../../slices/messagesSlice';
 import { useSocket } from '../../providers/SocketProvider';
-import toastifyConfig from '../../toastifyConfig';
+import handleError from '../../handleError';
 
 const MessagesHeader = ({ channelName, messagesCount, t }) => (
   <div className="bg-light mb-4 p-3 shadow-sm small">
@@ -76,7 +75,7 @@ const MessagesForm = ({ t }) => {
         formik.resetForm();
       } catch (err) {
         formik.setSubmitting(false);
-        toast.error(t('errors.networkError'), toastifyConfig);
+        handleError(err, t);
       }
     },
   });
