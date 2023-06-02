@@ -10,6 +10,7 @@ import { useAuth } from '../../providers/AuthProvider';
 import { getLogInSchema } from '../../validation';
 import AuthPagesInner from './AuthPagesInner';
 import handleError from '../../handleError';
+import routes from '../../routes';
 
 const LogInForm = ({ t }) => {
   const [failedLogIn, setFailedLogIn] = useState(false);
@@ -28,7 +29,7 @@ const LogInForm = ({ t }) => {
       try {
         await logIn(values);
 
-        navigate('/', { replace: true });
+        navigate(routes.mainPage(), { replace: true });
       } catch (err) {
         formik.setSubmitting(false);
 
@@ -82,7 +83,7 @@ const LogInPage = ({ t }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (checkAuth()) navigate('/', { replace: true });
+    if (checkAuth()) navigate(routes.mainPage(), { replace: true });
   }, []);
 
   return (

@@ -7,6 +7,7 @@ import { useAuth } from '../../providers/AuthProvider';
 import { getSignUpSchema } from '../../validation';
 import AuthPagesInner from './AuthPagesInner';
 import handleError from '../../handleError';
+import routes from '../../routes';
 
 const SignUpInput = ({
   formik, variant, t, failedSignUp,
@@ -54,7 +55,7 @@ const SignUpForm = ({ t }) => {
       try {
         await signUp(values);
 
-        navigate('/', { replace: true });
+        navigate(routes.mainPage(), { replace: true });
       } catch (err) {
         formik.setSubmitting(false);
 

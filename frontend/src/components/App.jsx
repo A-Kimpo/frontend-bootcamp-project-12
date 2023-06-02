@@ -26,7 +26,7 @@ import routes from '../routes';
 const AppNavBar = ({ t }) => (
   <Navbar expand="lg" bg="white" className="shadow-sm">
     <Container>
-      <Navbar.Brand as={Link} to="/">{t('appName')}</Navbar.Brand>
+      <Navbar.Brand as={Link} to={routes.mainPage()}>{t('appName')}</Navbar.Brand>
       <Nav className="mr-auto" />
       <AuthButton t={t} />
     </Container>
@@ -50,7 +50,7 @@ const PrivateRoute = ({ children }) => {
   return (
     loggedIn
       ? children
-      : <Navigate to="/login" state={{ from: location }} />
+      : <Navigate to={routes.logInPage()} state={{ from: location }} />
   );
 };
 

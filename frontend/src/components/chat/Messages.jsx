@@ -33,10 +33,11 @@ const MessagesHeader = ({ channelName, messagesCount, t }) => (
 );
 
 const MessagesField = ({ messages }) => {
+  const messageFieldRef = useRef();
+
   useEffect(() => {
-    const messagesBox = document.getElementById('messages-box');
-    messagesBox.scrollTop = messagesBox.scrollHeight;
-  });
+    messageFieldRef.current.scrollTop = messageFieldRef.current.scrollHeight;
+  }, [messages]);
 
   const renderMessages = messages
     .map(({ id, body, username }) => (
@@ -51,7 +52,7 @@ const MessagesField = ({ messages }) => {
     ));
 
   return (
-    <div id="messages-box" className="chat-messages overflow-auto px-5 ">
+    <div ref={messageFieldRef} id="messages-box" className="chat-messages overflow-auto px-5 ">
       {renderMessages}
     </div>
   );
@@ -74,6 +75,7 @@ const MessagesForm = ({ t }) => {
         addMessage(leoFilter.clean(textMessage));
         formik.resetForm();
       } catch (err) {
+        formik.setSubmitting(false);
         toast.error(t('errors.networkError'), toastifyConfig);
       }
     },
@@ -97,7 +99,7 @@ const MessagesForm = ({ t }) => {
           />
           <Button
             type="submit"
-            disabled=""
+            disabled={formik.isSubmitting}
             variant="group-vertical"
           >
             <Image src="sendMessage.svg" />

@@ -11,7 +11,7 @@ export const useSocket = () => useContext(SocketContext);
 
 const SocketProvider = ({ socket, children }) => {
   const dispatch = useDispatch();
-  const auth = useAuth();
+  const { getUserName } = useAuth();
 
   socket.on('newChannel', (channelName) => {
     dispatch(channelsActions.addChannel(channelName));
@@ -35,7 +35,7 @@ const SocketProvider = ({ socket, children }) => {
 
   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const addMessage = (text) => {
-    socket.emit('newMessage', { body: text, channelId: currentChannelId, username: auth.getUserName() });
+    socket.emit('newMessage', { body: text, channelId: currentChannelId, username: getUserName() });
   };
 
   const memo = useMemo(() => ({
