@@ -19,9 +19,12 @@ const RemoveModal = ({ id, hideModal, t }) => {
     initialValues: '',
     onSubmit: () => {
       try {
-        toast.success(t('toast.remove'), toastifyConfig);
-        removeChannel(id);
-        hideModal();
+        const { connected } = removeChannel(id);
+
+        if (connected) {
+          toast.success(t('toast.remove'), toastifyConfig);
+          hideModal();
+        }
       } catch (err) {
         handleError(err, t);
       }

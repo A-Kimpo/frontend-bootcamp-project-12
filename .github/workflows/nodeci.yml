@@ -28,3 +28,4 @@ jobs:
         run: make lint-frontend
         env: 
             ROLLBAR_TOKEN: ${{ secrets.ROLLBAR_TOKEN }}
+            ROLLBAR_ENV: ${{ secrets.ROLLBAR_ENV }}

@@ -29,7 +29,7 @@ export default async () => {
 
   const rollbarConfig = {
     accessToken: process.env.ROLLBAR_TOKEN,
-    environment: 'testenv',
+    environment: process.env.ROLLBAR_ENV,
   };
 
   return (

@@ -26,9 +26,12 @@ const AddModal = ({ hideModal, t }) => {
     validateOnChange: false,
     onSubmit: ({ channelName }) => {
       try {
-        toast.success(t('toast.add'), toastifyConfig);
-        addChannel(leoFilter.clean(channelName));
-        hideModal();
+        const { connected } = addChannel(leoFilter.clean(channelName));
+
+        if (connected) {
+          toast.success(t('toast.add'), toastifyConfig);
+          hideModal();
+        }
       } catch (err) {
         handleError(err, t);
       }

@@ -29,9 +29,12 @@ const RenameModal = ({ id, hideModal, t }) => {
     validateOnChange: false,
     onSubmit: ({ channelName }) => {
       try {
-        toast.success(t('toast.rename'), toastifyConfig);
-        renameChannel(id, leoFilter.clean(channelName));
-        hideModal();
+        const { connected } = renameChannel(id, leoFilter.clean(channelName));
+
+        if (connected) {
+          toast.success(t('toast.rename'), toastifyConfig);
+          hideModal();
+        }
       } catch (err) {
         handleError(err, t);
       }

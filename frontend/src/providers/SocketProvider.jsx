@@ -12,6 +12,7 @@ export const useSocket = () => useContext(SocketContext);
 const SocketProvider = ({ socket, children }) => {
   const dispatch = useDispatch();
   const { getUserName } = useAuth();
+
   socket.connect();
   socket.on('newChannel', (channelName) => {
     dispatch(channelsActions.addChannel(channelName));
@@ -27,14 +28,11 @@ const SocketProvider = ({ socket, children }) => {
   });
   socket.on('connect_error', () => {
     socket.disconnect();
-    // handleError(err, t);
-    // setTimeout(() => logOut(), 10000);
   });
 
-  const addChannel = async (name) => {
-    const response = await socket.emitWithAck('newChannel', { name });
+  const addChannel = (name) => socket.emit('newChannel', { name }, (response) => {
     dispatch(channelsActions.setCurrentChannel(response.data.id));
-  };
+  });
   const renameChannel = (id, name) => socket.emit('renameChannel', { id, name });
   const removeChannel = (id) => socket.emit('removeChannel', { id });
 

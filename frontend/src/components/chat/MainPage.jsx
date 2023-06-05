@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Container, Row } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 
 import { actions as channelsActions } from '../../slices/channelsSlice';
 import { actions as messagesActions } from '../../slices/messagesSlice';
 import Channels from './Channels';
 import Messages from './Messages';
 import { useAuth } from '../../providers/AuthProvider';
+import handleError from '../../handleError';
 
 const MainPage = () => {
   const { t } = useTranslation();
@@ -24,8 +24,11 @@ const MainPage = () => {
         dispatch(messagesActions.addMessages(messages));
         dispatch(channelsActions.setCurrentChannel(currentChannelId));
       } catch (err) {
-        toast.error(t('errors.authError'));
-        logOut();
+        handleError(err, t);
+
+        if (err.response.status === 401) {
+          logOut();
+        }
       }
     })();
   }, [dispatch]);
