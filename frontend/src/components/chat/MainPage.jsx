@@ -26,9 +26,7 @@ const MainPage = () => {
       } catch (err) {
         handleError(err, t);
 
-        if (err.response.status === 401) {
-          logOut();
-        }
+        if (err.response.status === 401) logOut();
       }
     })();
   }, [dispatch]);

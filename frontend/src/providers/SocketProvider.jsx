@@ -13,7 +13,6 @@ const SocketProvider = ({ socket, children }) => {
   const dispatch = useDispatch();
   const { getUserName } = useAuth();
 
-  socket.connect();
   socket.on('newChannel', (channelName) => {
     dispatch(channelsActions.addChannel(channelName));
   });
@@ -25,9 +24,6 @@ const SocketProvider = ({ socket, children }) => {
   });
   socket.on('newMessage', (messageText) => {
     dispatch(messagesActions.addMessage(messageText));
-  });
-  socket.on('connect_error', () => {
-    socket.disconnect();
   });
 
   const addChannel = (name) => socket.emit('newChannel', { name }, (response) => {
